@@ -1,0 +1,12 @@
+mutation UserLogin($email: String!, $password: String!) {
+  userLogin(loginInput: { email: $email, password: $password }) {
+    errors {
+      field
+      message
+    }
+    userAccount {
+      id
+    }
+    isSucess
+  }
+}

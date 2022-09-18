@@ -1,0 +1,40 @@
+query GetAllBooksGroupByTitle(
+  $page: Int!
+  $perPage: Int!
+  $filterByTitle: String!
+  $status: String!
+) {
+  getAllBooksGroupByTitle(
+    page: $page
+    perPage: $perPage
+    filterByTitle: $filterByTitle
+    status: $status
+  ) {
+    errors {
+      field
+      message
+    }
+    books {
+      id
+      title
+      isbnNumber
+      dewyDecimal
+      section
+      publisher
+      placeOfPublication
+      copyRightYear
+      type
+      status
+      copies
+      categories {
+        id
+        category
+      }
+      authors {
+        id
+        author
+      }
+    }
+    count
+  }
+}

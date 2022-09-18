@@ -1,0 +1,22 @@
+mutation CreateUserAccount(
+  $roleInput: String!
+  $accountInput: UserAccountArgs!
+  $userInput: UserArgs!
+) {
+  createUserAccount(
+    roleInput: $roleInput
+    accountInput: $accountInput
+    userInput: $userInput
+  ) {
+    errors {
+      field
+      message
+    }
+    userAccount {
+      id
+      userId
+      userAccountRoleId
+    }
+    isSucess
+  }
+}

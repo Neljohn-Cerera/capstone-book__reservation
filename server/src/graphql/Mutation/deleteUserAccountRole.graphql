@@ -1,0 +1,6 @@
+mutation DeleteUserAccountRole($id: Int!) {
+  deleteUserAccountRole(id: $id)
+}
+# {
+#   "id": 3
+# }

@@ -1,0 +1,11 @@
+query GetAllUsers {
+  getAllUsers {
+    idNumber
+    firstName
+    middleName
+    lastName
+    age
+    birthDate
+    address
+  }
+}

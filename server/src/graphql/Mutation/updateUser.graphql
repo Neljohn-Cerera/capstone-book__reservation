@@ -1,0 +1,30 @@
+mutation UpdateUser($id: Int!, $userInput: UserArgs!) {
+  updateUser(id: $id, userInput: $userInput) {
+    errors {
+      field
+      message
+    }
+    user {
+      idNumber
+      firstName
+      middleName
+      lastName
+      birthDate
+      age
+      address
+    }
+  }
+}
+
+# {
+#   "id": 2,
+#  "userInput": {
+#    "idNumber": "cph1729",
+#    "firstName": "final Test 2",
+#    "middleName": "final test 2",
+#    "lastName": "final test 2",
+#    "age": 12,
+#    "birthDate": "2005-11-11",
+#    "address": "final  test 2"
+#  }
+# }

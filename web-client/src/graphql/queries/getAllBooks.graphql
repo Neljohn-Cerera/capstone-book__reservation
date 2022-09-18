@@ -1,0 +1,25 @@
+query GetAllBooks($page: Int!, $perPage: Int!, $filterByTitle: String!) {
+  getAllBooks(page: $page, perPage: $perPage, filterByTitle: $filterByTitle) {
+    errors {
+      field
+      message
+    }
+    books {
+      id
+      groupUniqueIdentityId
+      bookId
+      title
+      status {
+        status
+      }
+      section {
+        section
+      }
+      dewyDecimal
+      bookType {
+        type
+      }
+    }
+    count
+  }
+}

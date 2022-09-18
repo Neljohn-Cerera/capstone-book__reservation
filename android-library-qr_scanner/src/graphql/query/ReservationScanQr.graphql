@@ -1,0 +1,28 @@
+query ReservationScanQr($qrCode: String!) {
+  reservationScanQr(qrCode: $qrCode) {
+    message
+    isSucess
+    borrowTransaction {
+      id
+      qrCode
+      borrowDate
+      returnDate
+      user {
+        id
+        idNumber
+        firstName
+        middleName
+        lastName
+      }
+      book {
+        id
+        title
+      }
+      borrowTransactionStatus {
+        id
+        status
+      }
+      fine
+    }
+  }
+}

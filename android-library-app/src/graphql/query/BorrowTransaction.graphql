@@ -1,0 +1,30 @@
+query BorrowTransaction(
+  $page: Int!
+  $perPage: Int!
+  $filterByNameOrByTitle: String!
+  $status: String!
+) {
+  borrowTransaction(
+    page: $page
+    perPage: $perPage
+    filterByNameOrByTitle: $filterByNameOrByTitle
+    status: $status
+  ) {
+    id
+    qrCode
+    borrowDate
+    returnDate
+    userId
+    idNumber
+    firstName
+    middleName
+    lastName
+    bookId
+    accountNumber
+    section
+    title
+    status
+    fine
+    remainingDays
+  }
+}

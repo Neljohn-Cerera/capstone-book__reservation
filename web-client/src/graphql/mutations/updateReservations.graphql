@@ -1,0 +1,33 @@
+mutation UpdateReservations($id: Int!, $status: String!, $details: String!) {
+  updateReservations(id: $id, status: $status, details: $details) {
+    errors {
+      field
+      message
+    }
+    reservations {
+      id
+      qrCode
+      reserveDate
+      user {
+        id
+        firstName
+        middleName
+        lastName
+        idNumber
+      }
+      book {
+        id
+        bookId
+        accountNumber
+        isbnNumber
+        title
+      }
+      reservationStatus {
+        status
+      }
+      details
+      expired
+    }
+    isSucess
+  }
+}

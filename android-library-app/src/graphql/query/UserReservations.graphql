@@ -1,0 +1,29 @@
+query UserReservations(
+  $page: Int!
+  $perPage: Int!
+  $userId: Int!
+  $status: String!
+) {
+  userReservations(
+    page: $page
+    perPage: $perPage
+    userId: $userId
+    status: $status
+  ) {
+    id
+    qrCode
+    reserveDate
+    book {
+      id
+      bookId
+      accountNumber
+      isbnNumber
+      title
+    }
+    reservationStatus {
+      status
+    }
+    details
+    expired
+  }
+}

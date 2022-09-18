@@ -1,0 +1,16 @@
+mutation CreateUserAccountRole($role: String!) {
+  createUserAccountRole(userAccountRoleInput: { role: $role }) {
+    errors {
+      message
+      field
+    }
+    role {
+      id
+      role
+    }
+  }
+}
+
+# {
+#   "role": "LIBRARYSTAFF"
+# }

@@ -1,0 +1,14 @@
+mutation DeleteUserAccount($accountId: Int!, $userId: Int!) {
+  deleteUserAccount(accountId: $accountId, userId: $userId) {
+    errors {
+      field
+      message
+    }
+    isSucess
+  }
+}
+
+# {
+#   "accountId": 1,
+#   "userId": 1
+# }

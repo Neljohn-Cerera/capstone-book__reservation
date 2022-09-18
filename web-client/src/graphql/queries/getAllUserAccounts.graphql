@@ -1,0 +1,33 @@
+query GetAllUserAccounts(
+  $page: Int!
+  $perPage: Int!
+  $filterByFnameMnameLname: String!
+) {
+  getAllUserAccounts(
+    page: $page
+    perPage: $perPage
+    filterByFnameMnameLname: $filterByFnameMnameLname
+  ) {
+    errors {
+      field
+      message
+    }
+    userAccounts {
+      id
+      mobileNumber
+      userAccountRole {
+        role
+      }
+      user {
+        id
+        idNumber
+        firstName
+        middleName
+        lastName
+      }
+      isActive
+    }
+    count
+    isSucess
+  }
+}

@@ -1,0 +1,24 @@
+mutation UpdateUserAccount($id: Int!, $accountInput: UserAccountArgs!) {
+  updateUserAccount(id: $id, accountInput: $accountInput) {
+    errors {
+      field
+      message
+    }
+    userAccount {
+      id
+      email
+      mobileNumber
+      isActive
+    }
+    isSucess
+  }
+}
+
+# {
+#  "id": 1,
+#   "accountInput": {
+#     "email": "john_test_final@gmail.com",
+#     "mobileNumber": "095457027272",
+#     "password": "testing"
+#   }
+# }

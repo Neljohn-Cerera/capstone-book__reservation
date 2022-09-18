@@ -1,0 +1,38 @@
+mutation CreateUserAccount(
+  $roleInput: String!
+  $accountInput: UserAccountArgs!
+  $userInput: UserArgs!
+) {
+  createUserAccount(
+    roleInput: $roleInput
+    accountInput: $accountInput
+    userInput: $userInput
+  ) {
+    errors {
+      field
+      message
+    }
+    userAccount {
+      id
+    }
+    isSucess
+  }
+}
+
+# {
+#   "roleInput": "STUDENT",
+#   "accountInput": {
+#     "email":"john2@gmail.com",
+#     "mobileNumber":"092562621112",
+#     "password":"testing"
+#   },
+#   "userInput": {
+#     "idNumber": "cph10212",
+#     "firstName": "Neljohn",
+#     "middleName": "RENTILL",
+#     "lastName": "CERERA",
+#     "age": 28,
+#     "birthDate": "2005-11-10",
+#     "address": "Toril Davao City"
+# 	}
+# }

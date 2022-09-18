@@ -1,0 +1,27 @@
+mutation CreateBook(
+  $categories: [String!]!
+  $authors: [String!]!
+  $section: String!
+  $status: String!
+  $bookType: String!
+  $input: BookArgs!
+) {
+  createBook(
+    categories: $categories
+    authors: $authors
+    section: $section
+    status: $status
+    bookType: $bookType
+    input: $input
+  ) {
+    errors {
+      field
+      message
+    }
+    book {
+      id
+      groupUniqueIdentityId
+    }
+    isSucess
+  }
+}

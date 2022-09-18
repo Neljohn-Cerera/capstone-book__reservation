@@ -1,0 +1,13 @@
+mutation UpdateSettings($fine: Float!) {
+  updateSettings(input: { fine: $fine }) {
+    errors {
+      field
+      message
+    }
+    settings {
+      id
+      fine
+    }
+    isSucess
+  }
+}

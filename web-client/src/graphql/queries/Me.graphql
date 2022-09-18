@@ -1,0 +1,12 @@
+query Me {
+  me {
+    id
+    idNumber
+    firstName
+    middleName
+    lastName
+    age
+    birthDate
+    address
+  }
+}

@@ -1,0 +1,426 @@
+import { Form, Formik } from 'formik';
+import type { NextPage } from 'next';
+import Head from 'next/head';
+import { iconCancel, iconSubmit } from '../../src/assets/icons';
+import Button from '../../src/components/shared/buttons/base';
+import IconButton from '../../src/components/shared/buttons/iconButton';
+import Input from '../../src/components/shared/input';
+import HomeBreadCrumbs from '../../src/components/homepage/breadCrumbs';
+
+const DashboardPage: NextPage = () => {
+  return (
+    <div className="mb-5">
+      <Head>
+        <title>Dashboard</title>
+        <meta
+          name="description"
+          content="Saint Peter Colloge of Toril Library"
+        />
+        <link rel="icon" href="/spct.ico" />
+      </Head>
+
+      <HomeBreadCrumbs />
+
+      <div className="mb-5">
+        <Button
+          iconPath={iconCancel}
+          icon="left"
+          backGroundColor="blue"
+          size="xs"
+          text="XS"
+          mr="base"
+        />
+        <Button
+          iconPath={iconCancel}
+          icon="left"
+          backGroundColor="blue"
+          size="sm"
+          text="Small"
+          mr="base"
+        />
+        <Button
+          iconPath={iconCancel}
+          icon="left"
+          backGroundColor="blue"
+          size="base"
+          text="Base"
+          mr="base"
+        />
+        <Button
+          iconPath={iconSubmit}
+          icon="right"
+          backGroundColor="yellow"
+          size="lg"
+          text="Large"
+          mr="base"
+        />
+        <Button
+          iconPath={iconSubmit}
+          icon="left"
+          backGroundColor="red"
+          size="xl"
+          text="XL"
+          mr="base"
+        />
+        <IconButton
+          iconPath={iconCancel}
+          backGroundColor="blue"
+          textColor="blue"
+          size="xs"
+        />
+        <IconButton
+          iconPath={iconCancel}
+          backGroundColor="yellow"
+          textColor="yellow"
+          size="sm"
+        />
+        <IconButton
+          iconPath={iconCancel}
+          backGroundColor="red"
+          textColor="red"
+          size="base"
+        />
+        <IconButton
+          iconPath={iconCancel}
+          backGroundColor="gray"
+          textColor="gray"
+          size="lg"
+        />
+        <IconButton
+          iconPath={iconCancel}
+          backGroundColor="green"
+          textColor="green"
+          size="xl"
+        />
+
+        <div className="mb-2">
+          <Button
+            disabled
+            fullWidth
+            icon="left"
+            iconPath={iconCancel}
+            backGroundColor="gray"
+            size="xs"
+            text="XS"
+            mr="base"
+            mt="base"
+          />
+        </div>
+        <div className="mb-2">
+          <Button
+            fullWidth
+            icon="left"
+            iconPath={iconCancel}
+            backGroundColor="green"
+            size="sm"
+            text="SM"
+            mr="base"
+          />
+        </div>
+        <div className="mb-2">
+          <Button
+            fullWidth
+            icon="left"
+            iconPath={iconCancel}
+            backGroundColor="blue"
+            size="base"
+            text="BASE"
+            mr="base"
+          />
+        </div>
+        <div className="mb-2">
+          <Button
+            fullWidth
+            icon="right"
+            iconPath={iconCancel}
+            backGroundColor="yellow"
+            size="lg"
+            text="LG"
+            mr="base"
+          />
+        </div>
+        <div className="mb-2">
+          <Button
+            fullWidth
+            icon="left"
+            iconPath={iconSubmit}
+            backGroundColor="red"
+            size="xl"
+            text="XL"
+            mr="base"
+          />
+        </div>
+      </div>
+
+      <Formik
+        initialValues={{ username: '' }}
+        onSubmit={(values) => {
+          console.log('values : ', values);
+        }}
+      >
+        {(formik) => (
+          <Form className="w-3/5 mt-2 ml-auto mr-auto">
+            <Input
+              hasIcon={false}
+              type="text"
+              label="Small"
+              id="username"
+              name="username"
+              size="sm"
+              placeholder="asdasdadsda"
+            />
+            <Input
+              hasIcon={false}
+              placeholder="base"
+              type="text"
+              label="Base"
+              id="username"
+              name="username"
+              size="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="XS"
+              placeholder="XS"
+              hasIcon={false}
+              size="xs"
+              mt="base"
+            />
+
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="SM"
+              placeholder="SM"
+              hasIcon={false}
+              size="sm"
+              mt="base"
+            />
+
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="BASE"
+              placeholder="BASE"
+              hasIcon={false}
+              size="base"
+              mt="base"
+            />
+
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="LG"
+              placeholder="LG"
+              hasIcon={false}
+              size="lg"
+              mt="base"
+            />
+
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="XL"
+              placeholder="XL"
+              hasIcon={false}
+              size="xl"
+              mt="base"
+            />
+            {/* ERROR */}
+
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="XS"
+              placeholder="XS"
+              hasIcon={false}
+              size="xs"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="SM"
+              placeholder="SM"
+              hasIcon={false}
+              size="sm"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="BASE"
+              placeholder="BASE"
+              hasIcon={false}
+              size="base"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="LG"
+              placeholder="LG"
+              hasIcon={false}
+              size="lg"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="XL"
+              placeholder="XL"
+              hasIcon={false}
+              size="xl"
+              mt="base"
+            />
+            {/* HAS ICON LEFT */}
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="XS"
+              placeholder="XS"
+              hasIcon
+              iconPath={iconCancel}
+              icon="left"
+              size="xs"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="SM"
+              placeholder="SM"
+              hasIcon
+              iconPath={iconCancel}
+              icon="left"
+              size="sm"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="BASE"
+              placeholder="BASE"
+              hasIcon
+              iconPath={iconCancel}
+              icon="left"
+              size="base"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="LG"
+              placeholder="LG"
+              hasIcon
+              iconPath={iconCancel}
+              icon="left"
+              size="lg"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="XL"
+              placeholder="XL"
+              hasIcon
+              iconPath={iconCancel}
+              icon="left"
+              size="xl"
+              mt="base"
+            />
+            {/* HAS ICON RIGHT */}
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="XS"
+              placeholder="XS"
+              hasIcon
+              iconPath={iconCancel}
+              icon="right"
+              size="xs"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="SM"
+              placeholder="SM"
+              hasIcon
+              iconPath={iconCancel}
+              icon="right"
+              size="sm"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="BASE"
+              placeholder="BASE"
+              hasIcon
+              iconPath={iconCancel}
+              icon="right"
+              size="base"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="LG"
+              placeholder="LG"
+              hasIcon
+              iconPath={iconCancel}
+              icon="right"
+              size="lg"
+              mt="base"
+            />
+            <Input
+              id="username"
+              name="username"
+              type="text"
+              label="XL"
+              placeholder="XL"
+              hasIcon
+              iconPath={iconCancel}
+              icon="right"
+              size="xl"
+              mt="base"
+            />
+
+            <Button
+              type="submit"
+              iconPath={iconCancel}
+              icon="left"
+              backGroundColor="blue"
+              size="base"
+              text="Submit"
+              mt="base"
+            />
+          </Form>
+        )}
+      </Formik>
+    </div>
+  );
+};
+
+export default DashboardPage;

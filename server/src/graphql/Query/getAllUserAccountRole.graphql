@@ -1,0 +1,6 @@
+query GetAllUserAccountRoles {
+  getAllUserAccountRoles {
+    id
+    role
+  }
+}

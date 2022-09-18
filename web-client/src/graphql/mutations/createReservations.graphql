@@ -1,0 +1,32 @@
+mutation CreateReservations($input: [ReservationsArgs!]!) {
+  createReservations(input: $input) {
+    errors {
+      field
+      message
+    }
+    reservations {
+      id
+      qrCode
+      reserveDate
+      user {
+        id
+        firstName
+        middleName
+        lastName
+        idNumber
+      }
+      book {
+        id
+        bookId
+        accountNumber
+        isbnNumber
+        title
+      }
+      reservationStatus {
+        status
+      }
+      details
+      expired
+    }
+  }
+}

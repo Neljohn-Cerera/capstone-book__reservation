@@ -1,0 +1,11 @@
+mutation UpdateUserAccountRole($id: Int!, $role: String!) {
+  updateUserAccountRole(id: $id, userAccountRoleInput: { role: $role }) {
+    id
+    role
+  }
+}
+
+# {
+#   "id": 1,
+#   "role": "STUDENT TEST"
+# }

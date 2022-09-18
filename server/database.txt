@@ -1,0 +1,34 @@
+host : ec2-107-23-41-227.compute-1.amazonaws.com
+database : de92c6qecnevk1
+user : ktiizewvcxwckk
+password : 
+b2a083ba114e2d4bf96f197438f50a77c1f88eab28dfdcdcce875cdbdf65d8aa
+port : 5432
+
+
+
+default : 
+{
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "postgres",
+  "password": "admin2021",
+  "database": "bookreservation",
+  "synchronize": true,
+  "logging": false,
+  "entities": ["dist/entities/*.js"]
+}
+
+heroku deployment :
+{
+  "type": "postgres",
+  "host": "ec2-107-23-41-227.compute-1.amazonaws.com",
+  "port": 5432,
+  "username": "ktiizewvcxwckk",
+  "password": "b2a083ba114e2d4bf96f197438f50a77c1f88eab28dfdcdcce875cdbdf65d8aa",
+  "database": "de92c6qecnevk1",
+  "synchronize": true,
+  "logging": false,
+  "entities": ["dist/entities/*.js"]
+}

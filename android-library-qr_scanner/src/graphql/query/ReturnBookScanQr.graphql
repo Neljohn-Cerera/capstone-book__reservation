@@ -1,0 +1,20 @@
+query ReturnBookScanQr($qrCode: String!) {
+  returnBookScanQr(qrCode: $qrCode) {
+    borrowTransaction {
+      id
+      qrCode
+      borrowDate
+      returnDate
+      idNumber
+      firstName
+      middleName
+      lastName
+      bookId
+      accountNumber
+      title
+      fine
+    }
+    message
+    isSucess
+  }
+}
