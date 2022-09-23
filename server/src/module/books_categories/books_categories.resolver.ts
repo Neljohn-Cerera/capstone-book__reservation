@@ -1,23 +1,21 @@
-import { getConnection } from 'typeorm';
-import { Books_Categories } from '../../entities/Books_Categories';
-import { BookCategory } from './../../entities/BookCategory';
-import { Book } from './../../entities/Book';
-import { Resolver, Query, Mutation, Arg, Int } from 'type-graphql';
-
-const connection = getConnection();
+import { datasource } from "../../db";
+import { Books_Categories } from "../../entities/Books_Categories";
+import { BookCategory } from "./../../entities/BookCategory";
+import { Book } from "./../../entities/Book";
+import { Resolver, Query, Mutation, Arg, Int } from "type-graphql";
 
 @Resolver()
 export class BooksCategoriesResolver {
   // add category to a book
   @Mutation(() => Boolean)
   async addCategoryToBook(
-    @Arg('bookId') bookId: string,
-    @Arg('categories', () => [String]) categories: string[]
+    @Arg("bookId") bookId: string,
+    @Arg("categories", () => [String]) categories: string[]
   ): Promise<Boolean> {
-    const book = await Book.findOne({ bookId });
+    const book = await Book.findOne({ where: { bookId } });
     if (!book) return false;
     categories.map(async (category) => {
-      const _category = await BookCategory.findOne({ category });
+      const _category = await BookCategory.findOne({ where: { category } });
       if (!_category) {
         // if categry is not found we'll create category
         const newCategory = await BookCategory.create({ category }).save();
@@ -43,20 +41,20 @@ export class BooksCategoriesResolver {
   // remove category from book
   @Mutation(() => Boolean)
   async removeCategoryFromBook(
-    @Arg('bookId', () => Int) bookId: number,
-    @Arg('bookCategoryId', () => Int) bookCategoryId: number
+    @Arg("bookId", () => Int) bookId: number,
+    @Arg("bookCategoryId", () => Int) bookCategoryId: number
   ): Promise<Boolean> {
-    const removeCategory = await connection
+    const removeCategory = await datasource
       .createQueryBuilder()
       .delete()
       .from(Books_Categories)
-      .where('bookId = :bookId and bookCategoryId = :bookCategoryId', {
+      .where("bookId = :bookId and bookCategoryId = :bookCategoryId", {
         bookId: bookId,
         bookCategoryId: bookCategoryId,
       })
       .execute();
 
-    console.log('removeCategory : ', removeCategory);
+    console.log("removeCategory : ", removeCategory);
     if (removeCategory.affected === 0) {
       return false;
     }

@@ -1,9 +1,9 @@
-import { UserAccountRole } from '../../entities/UserAccountRole';
-import { validateUserAccountRoleArgs } from './userAccountRole.validate';
-import { UserAccountRoleArgs } from './userAccountRole.args';
-import { Arg, Mutation, Query, Resolver, Int } from 'type-graphql';
-import { getConnection } from 'typeorm';
-import { UserAccountRoleResponse } from './userAccountRole.response';
+import { UserAccountRole } from "../../entities/UserAccountRole";
+import { validateUserAccountRoleArgs } from "./userAccountRole.validate";
+import { UserAccountRoleArgs } from "./userAccountRole.args";
+import { Arg, Mutation, Query, Resolver, Int } from "type-graphql";
+import { datasource } from "../../db";
+import { UserAccountRoleResponse } from "./userAccountRole.response";
 // Account
 @Resolver()
 export class UserRoleResolver {
@@ -15,7 +15,7 @@ export class UserRoleResolver {
   // Insert role
   @Mutation(() => UserAccountRoleResponse)
   async createUserAccountRole(
-    @Arg('userAccountRoleInput') { role }: UserAccountRoleArgs
+    @Arg("userAccountRoleInput") { role }: UserAccountRoleArgs
   ): Promise<UserAccountRoleResponse> {
     // input validation
     const errors = validateUserAccountRoleArgs({ role });
@@ -29,7 +29,7 @@ export class UserRoleResolver {
   // Delete role
   @Mutation(() => Boolean)
   async deleteUserAccountRole(
-    @Arg('id', () => Int) id: number
+    @Arg("id", () => Int) id: number
   ): Promise<Boolean> {
     const isRoleDeleted = await UserAccountRole.delete(id);
     if (!isRoleDeleted) {
@@ -49,17 +49,17 @@ export class UserRoleResolver {
   // Delete rolee
   @Mutation(() => UserAccountRole, { nullable: true })
   async updateUserAccountRole(
-    @Arg('id', () => Int) id: number,
-    @Arg('userAccountRoleInput') dataInput: UserAccountRoleArgs
+    @Arg("id", () => Int) id: number,
+    @Arg("userAccountRoleInput") dataInput: UserAccountRoleArgs
   ): Promise<UserAccountRole | null> {
-    const role = await getConnection()
+    const role = await datasource
       .createQueryBuilder()
       .update(UserAccountRole)
       .set({ ...dataInput })
-      .where('id = :id', {
+      .where("id = :id", {
         id,
       })
-      .returning('*')
+      .returning("*")
       .execute()
       .then((response) => {
         return response.raw[0];

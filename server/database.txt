@@ -5,15 +5,13 @@ password :
 b2a083ba114e2d4bf96f197438f50a77c1f88eab28dfdcdcce875cdbdf65d8aa
 port : 5432
 
-
-
 default : 
 {
   "type": "postgres",
   "host": "localhost",
   "port": 5432,
   "username": "postgres",
-  "password": "admin2021",
+  "password": "admin2022",
   "database": "bookreservation",
   "synchronize": true,
   "logging": false,

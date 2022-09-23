@@ -1,15 +1,12 @@
-import { Settings } from './../../entities/Settings';
-import { BorrowTransaction } from './../../entities/BorrowTransaction';
-import { updateEntity } from './../../utils/updateEntity';
-import { Arg, Query, Resolver, Int } from 'type-graphql';
-import { getConnection } from 'typeorm';
+import { Settings } from "./../../entities/Settings";
+import { BorrowTransaction } from "./../../entities/BorrowTransaction";
+import { updateEntity } from "./../../utils/updateEntity";
+import { Arg, Query, Resolver, Int } from "type-graphql";
+import { datasource } from "../../db";
 import {
   BorrowTransactionProps,
   BorrowTransactionResponse,
-} from './borrowTransaction.response';
-
-// Connection Setup
-const connection = getConnection();
+} from "./borrowTransaction.response";
 
 @Resolver()
 export class BorrowTransactionResolver {
@@ -24,15 +21,15 @@ export class BorrowTransactionResolver {
    */
   @Query(() => [BorrowTransactionProps])
   async borrowTransaction(
-    @Arg('page', () => Int) page: number,
-    @Arg('perPage', () => Int) perPage: number,
-    @Arg('filterByNameOrByTitle') filterByNameOrByTitle: string,
-    @Arg('status') status: string
+    @Arg("page", () => Int) page: number,
+    @Arg("perPage", () => Int) perPage: number,
+    @Arg("filterByNameOrByTitle") filterByNameOrByTitle: string,
+    @Arg("status") status: string
   ): Promise<BorrowTransactionProps[] | null> {
     let borrowTransaction: BorrowTransactionProps[] = [];
     let borrowRaw: BorrowTransactionProps[] = [];
     try {
-      await getConnection().transaction(async (tm) => {
+      await datasource.manager.transaction(async (tm) => {
         const rawData = await tm.query(
           `
       SELECT "borrowTransaction"."id",
@@ -48,7 +45,7 @@ export class BorrowTransactionResolver {
           await Promise.all(
             rawData.map(async (borrow: any) => {
               if (borrow.remainingdays < 0) {
-                const settings = await Settings.findOne({ id: 1 });
+                const settings = await Settings.findOne({ where: { id: 1 } });
                 const bookFine = Math.abs(borrow.remainingdays);
                 if (settings) {
                   const fine = bookFine * settings?.fine;
@@ -62,7 +59,7 @@ export class BorrowTransactionResolver {
           );
         }
       });
-      borrowRaw = await connection.query(
+      borrowRaw = await datasource.query(
         `
       SELECT "borrowTransaction"."id","borrowTransaction"."qrCode","borrowTransaction".
       "borrowDate","borrowTransaction"."returnDate","borrowTransaction"."fine","borrowTransaction"."paymentStatus",
@@ -81,7 +78,7 @@ export class BorrowTransactionResolver {
         [`%${filterByNameOrByTitle}%`, status, (page - 1) * perPage, perPage]
       );
     } catch (error) {
-      console.log('borrow transaction query error : ', error);
+      console.log("borrow transaction query error : ", error);
     }
     borrowTransaction = borrowRaw;
     return borrowTransaction;
@@ -98,15 +95,15 @@ export class BorrowTransactionResolver {
    */
   @Query(() => [BorrowTransactionProps])
   async userBorrowTransaction(
-    @Arg('page', () => Int) page: number,
-    @Arg('perPage', () => Int) perPage: number,
-    @Arg('userId', () => Int) userId: number,
-    @Arg('status') status: string
+    @Arg("page", () => Int) page: number,
+    @Arg("perPage", () => Int) perPage: number,
+    @Arg("userId", () => Int) userId: number,
+    @Arg("status") status: string
   ): Promise<BorrowTransactionProps[] | null> {
     let borrowTransaction: BorrowTransactionProps[] = [];
     let borrowRaw: BorrowTransactionProps[] = [];
     try {
-      await getConnection().transaction(async (tm) => {
+      await datasource.manager.transaction(async (tm) => {
         const rawData = await tm.query(
           `
       SELECT "borrowTransaction"."id","user"."id" as "userId",
@@ -134,7 +131,7 @@ export class BorrowTransactionResolver {
           );
         }
       });
-      borrowRaw = await connection.query(
+      borrowRaw = await datasource.query(
         `
       SELECT "borrowTransaction"."id","borrowTransaction"."qrCode","borrowTransaction".
       "borrowDate","borrowTransaction"."returnDate","borrowTransaction"."fine",
@@ -153,7 +150,7 @@ export class BorrowTransactionResolver {
         [userId, status, (page - 1) * perPage, perPage]
       );
     } catch (error) {
-      console.log('borrow transaction query error : ', error);
+      console.log("borrow transaction query error : ", error);
     }
     borrowTransaction = borrowRaw;
     return borrowTransaction;
@@ -161,7 +158,7 @@ export class BorrowTransactionResolver {
 
   @Query(() => BorrowTransactionResponse)
   async returnBookScanQr(
-    @Arg('qrCode') qrCode: string
+    @Arg("qrCode") qrCode: string
   ): Promise<BorrowTransactionResponse> {
     let borrowRaw = [];
     // validate qrcode with uuid format
@@ -169,14 +166,14 @@ export class BorrowTransactionResolver {
       /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
     if (!validateUUID.test(qrCode)) {
       return {
-        message: 'Borrow Transaction is not valid',
+        message: "Borrow Transaction is not valid",
         isSucess: false,
       };
     }
 
     try {
       Promise.all(
-        (borrowRaw = await connection.query(
+        (borrowRaw = await datasource.query(
           `
       SELECT "borrowTransaction"."id","borrowTransaction"."qrCode",
       "borrowDate","borrowTransaction"."returnDate","borrowTransaction"."fine",
@@ -194,28 +191,28 @@ export class BorrowTransactionResolver {
         ))
       );
     } catch (error) {
-      console.log('borrow transaction scan qr error : ', error);
+      console.log("borrow transaction scan qr error : ", error);
     }
     if (borrowRaw.length === 0) {
       return {
-        message: 'Borrower does not exist',
+        message: "Borrower does not exist",
         isSucess: false,
       };
     }
-    if (borrowRaw[0].status === 'OVERDUE') {
+    if (borrowRaw[0].status === "OVERDUE") {
       return {
         message:
-          'This borrowed is overdue. Please pay the fine to proceed returning.',
+          "This borrowed is overdue. Please pay the fine to proceed returning.",
         isSucess: false,
       };
     }
-    if (borrowRaw[0].status === 'RETURNED') {
+    if (borrowRaw[0].status === "RETURNED") {
       return {
-        message: 'This borrowed transaction was already done.',
+        message: "This borrowed transaction was already done.",
         isSucess: false,
       };
     }
-    if (borrowRaw[0].status === 'BORROWED') {
+    if (borrowRaw[0].status === "BORROWED") {
       try {
         // 1 = BORROWED, 2 = RETURNED 3 = OVERDUE, 4 = LOST
         const updateBorrowed = await updateEntity(
@@ -223,21 +220,21 @@ export class BorrowTransactionResolver {
           BorrowTransaction,
           {
             borrowTransactionStatusId: 2,
-            paymentStatus: 'PAID',
+            paymentStatus: "PAID",
           } as BorrowTransaction
         );
 
         if (!updateBorrowed) {
-          return { isSucess: false, message: 'Returned book Not Successfull' };
+          return { isSucess: false, message: "Returned book Not Successfull" };
         }
       } catch (error) {
-        console.log('returnBookScanQr update borrowstatus error : ', error);
+        console.log("returnBookScanQr update borrowstatus error : ", error);
       }
     }
 
     return {
       borrowTransaction: borrowRaw[0],
-      message: 'Returned Book Successfull',
+      message: "Returned Book Successfull",
       isSucess: true,
     };
   }

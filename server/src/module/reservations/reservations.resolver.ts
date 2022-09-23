@@ -1,21 +1,19 @@
-import { User } from './../../entities/User';
-import { BorrowTransaction } from './../../entities/BorrowTransaction';
-import { Book } from './../../entities/Book';
-import { ReservationStatus } from './../../entities/ReservationStatus';
-import { databaseError } from './../../utils/databaseError';
-import { updateEntity } from './../../utils/updateEntity';
-import { ReservationsArgs } from './reservations.args';
-import { Reservations } from './../../entities/Reservations';
-import { Arg, Mutation, Query, Resolver, Int } from 'type-graphql';
+import { User } from "./../../entities/User";
+import { BorrowTransaction } from "./../../entities/BorrowTransaction";
+import { Book } from "./../../entities/Book";
+import { ReservationStatus } from "./../../entities/ReservationStatus";
+import { databaseError } from "./../../utils/databaseError";
+import { updateEntity } from "./../../utils/updateEntity";
+import { ReservationsArgs } from "./reservations.args";
+import { Reservations } from "./../../entities/Reservations";
+import { Arg, Mutation, Query, Resolver, Int } from "type-graphql";
 import {
   CreateReservationResponse,
   ReservationsResponse,
-} from './reservations.response';
-import { getConnection } from 'typeorm';
+} from "./reservations.response";
+import { datasource } from "../../db";
 
-// Connection Setup
-const connection = getConnection();
-const queryRunner = connection.createQueryRunner();
+const queryRunner = datasource.createQueryRunner();
 const { manager } = queryRunner;
 
 @Resolver()
@@ -34,7 +32,7 @@ export class ReservationsResolver {
    */
   @Query(() => ReservationsResponse)
   async reservationScanQr(
-    @Arg('qrCode') qrCode: string
+    @Arg("qrCode") qrCode: string
   ): Promise<ReservationsResponse> {
     // find Reservations qith qrCo
 
@@ -43,16 +41,16 @@ export class ReservationsResolver {
       /^[0-9a-fA-F]{8}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{4}\b-[0-9a-fA-F]{12}$/gi;
     if (!validateUUID.test(qrCode)) {
       return {
-        message: 'Reservations is not valid',
+        message: "Reservations is not valid",
         isSucess: false,
       };
     }
     try {
       const reservations = await Reservations.findOne({
         join: {
-          alias: 'reservations',
+          alias: "reservations",
           innerJoinAndSelect: {
-            reservationStatus: 'reservations.reservationStatus',
+            reservationStatus: "reservations.reservationStatus",
           },
         },
         where: {
@@ -63,57 +61,57 @@ export class ReservationsResolver {
       // If reseervation was already been made , expired = true
       if (reservations?.expired) {
         return {
-          message: 'Reservation was already expired',
+          message: "Reservation was already expired",
           isSucess: false,
         };
       }
       // If Reservation not found
       if (!reservations) {
         return {
-          message: 'Reservation does not exist',
+          message: "Reservation does not exist",
           isSucess: false,
         };
       }
       // If Reservation Status is PENDING
-      if (reservations?.reservationStatus?.status === 'PENDING') {
+      if (reservations?.reservationStatus?.status === "PENDING") {
         return {
-          message: 'Reservation was not yet APROVE',
+          message: "Reservation was not yet APROVE",
           isSucess: false,
         };
       }
       // If Reservation Status is DISAPPROVED
-      if (reservations?.reservationStatus?.status === 'DISAPPROVED') {
-        return { message: 'Reservation was DISAPPROVED', isSucess: false };
+      if (reservations?.reservationStatus?.status === "DISAPPROVED") {
+        return { message: "Reservation was DISAPPROVED", isSucess: false };
       }
       // If Reservation Status is APPROVED
-      if (reservations?.reservationStatus?.status === 'APPROVED') {
+      if (reservations?.reservationStatus?.status === "APPROVED") {
         // Connection Setup
         await queryRunner.connect();
         const book = await manager
           .getRepository(Book)
-          .createQueryBuilder('book')
+          .createQueryBuilder("book")
           .select([
-            'book.id',
-            'book.accountNumber',
-            'book.bookId',
-            'book.title',
+            "book.id",
+            "book.accountNumber",
+            "book.bookId",
+            "book.title",
           ])
-          .innerJoinAndSelect('book.section', 'section')
-          .where('book.id = :id', {
+          .innerJoinAndSelect("book.section", "section")
+          .where("book.id = :id", {
             id: reservations.bookId,
           })
           .getOne();
         const user = await manager
           .getRepository(User)
-          .createQueryBuilder('user')
+          .createQueryBuilder("user")
           .select([
-            'user.id',
-            'user.idNumber',
-            'user.firstName',
-            'user.middleName',
-            'user.lastName',
+            "user.id",
+            "user.idNumber",
+            "user.firstName",
+            "user.middleName",
+            "user.lastName",
           ])
-          .where('user.id = :id', {
+          .where("user.id = :id", {
             id: reservations.userId,
           })
           .getOne();
@@ -122,9 +120,9 @@ export class ReservationsResolver {
           let returnDate = new Date();
           let borrowTransaction;
           // If Circulation borrowdate add 3 days before returning
-          if (book?.section.section === 'Circulation') {
+          if (book?.section.section === "Circulation") {
             returnDate.setDate(returnDate.getDate() + 3);
-          } else if (book?.section.section === 'Filipiniana') {
+          } else if (book?.section.section === "Filipiniana") {
             // If Filipiniana borrowdate add 2 days before returning
             returnDate.setDate(returnDate.getDate() + 2);
           }
@@ -141,7 +139,7 @@ export class ReservationsResolver {
               // 1 = BORROWED, 2 = RETURNED 3 = OVERDUE, 4 = LOST
               borrowTransactionStatusId: 1,
             })
-            .returning('*')
+            .returning("*")
             .execute()
             .then((response) => {
               return response.raw[0];
@@ -157,18 +155,18 @@ export class ReservationsResolver {
             user,
             borrowTransactionStatus: {
               id: 1,
-              status: 'BORROWED',
+              status: "BORROWED",
             },
           };
           return {
             borrowTransaction,
-            message: 'Borrow Successfull',
+            message: "Borrow Successfull",
             isSucess: true,
           };
         }
       }
     } catch (error) {
-      console.log('reservations error : ', error);
+      console.log("reservations error : ", error);
     }
     return { isSucess: true };
   }
@@ -183,26 +181,26 @@ export class ReservationsResolver {
    */
   @Query(() => [Reservations])
   async reservations(
-    @Arg('page', () => Int) page: number,
-    @Arg('perPage', () => Int) perPage: number,
-    @Arg('filterByName') filterByName: string,
-    @Arg('status') status: string
+    @Arg("page", () => Int) page: number,
+    @Arg("perPage", () => Int) perPage: number,
+    @Arg("filterByName") filterByName: string,
+    @Arg("status") status: string
   ): Promise<Reservations[] | null> {
-    const reservationsRepo = connection.getRepository(Reservations);
+    const reservationsRepo = datasource.getRepository(Reservations);
     const reservations = await reservationsRepo
-      .createQueryBuilder('reservations')
-      .innerJoinAndSelect('reservations.user', 'user')
-      .innerJoinAndSelect('reservations.book', 'book')
-      .innerJoinAndSelect('reservations.reservationStatus', 'reservationStatus')
-      .where('user.firstName ILIKE :name', {
+      .createQueryBuilder("reservations")
+      .innerJoinAndSelect("reservations.user", "user")
+      .innerJoinAndSelect("reservations.book", "book")
+      .innerJoinAndSelect("reservations.reservationStatus", "reservationStatus")
+      .where("user.firstName ILIKE :name", {
         name: `%${filterByName}%`,
       })
-      .andWhere('reservationStatus.status = :status', {
+      .andWhere("reservationStatus.status = :status", {
         status,
       })
       .offset((page - 1) * perPage)
       .limit(perPage)
-      .orderBy('user.firstName', 'ASC')
+      .orderBy("user.firstName", "ASC")
       .getMany();
 
     return reservations;
@@ -218,21 +216,21 @@ export class ReservationsResolver {
    */
   @Query(() => [Reservations])
   async userReservations(
-    @Arg('page', () => Int) page: number,
-    @Arg('perPage', () => Int) perPage: number,
-    @Arg('userId', () => Int) userId: number,
-    @Arg('status') status: string
+    @Arg("page", () => Int) page: number,
+    @Arg("perPage", () => Int) perPage: number,
+    @Arg("userId", () => Int) userId: number,
+    @Arg("status") status: string
   ): Promise<Reservations[] | null> {
-    const reservationsRepo = connection.getRepository(Reservations);
+    const reservationsRepo = datasource.getRepository(Reservations);
     const reservations = await reservationsRepo
-      .createQueryBuilder('reservations')
-      .innerJoinAndSelect('reservations.user', 'user')
-      .innerJoinAndSelect('reservations.book', 'book')
-      .innerJoinAndSelect('reservations.reservationStatus', 'reservationStatus')
-      .where('user.id = :userId', {
+      .createQueryBuilder("reservations")
+      .innerJoinAndSelect("reservations.user", "user")
+      .innerJoinAndSelect("reservations.book", "book")
+      .innerJoinAndSelect("reservations.reservationStatus", "reservationStatus")
+      .where("user.id = :userId", {
         userId: userId,
       })
-      .andWhere('reservationStatus.status = :status', {
+      .andWhere("reservationStatus.status = :status", {
         status,
       })
       .offset((page - 1) * perPage)
@@ -254,7 +252,7 @@ export class ReservationsResolver {
    */
   @Mutation(() => CreateReservationResponse)
   async createReservations(
-    @Arg('input', () => [ReservationsArgs]) input: ReservationsArgs[]
+    @Arg("input", () => [ReservationsArgs]) input: ReservationsArgs[]
   ): Promise<CreateReservationResponse> {
     // States
     const newReservations: any[] = [];
@@ -269,23 +267,23 @@ export class ReservationsResolver {
         // Checking availability of the book
         const book = await manager
           .getRepository(Book)
-          .createQueryBuilder('book')
+          .createQueryBuilder("book")
           .select([
-            'book.id',
-            'book.bookId',
-            'book.accountNumber',
-            'book.isbnNumber',
-            'book.title',
+            "book.id",
+            "book.bookId",
+            "book.accountNumber",
+            "book.isbnNumber",
+            "book.title",
           ])
-          .innerJoinAndSelect('book.status', 'status')
-          .where('book.title = :title', { title: val.title })
-          .andWhere('status.status = :status', {
-            status: 'AVAILABLE',
+          .innerJoinAndSelect("book.status", "status")
+          .where("book.title = :title", { title: val.title })
+          .andWhere("status.status = :status", {
+            status: "AVAILABLE",
           })
           .getOne();
         const user = await User.findOne({ where: { id: val.userId } });
         const reservationStatus = await ReservationStatus.findOne({
-          status: 'PENDING',
+          where: { status: "PENDING" },
         });
         // If book ${val.book} is available,  proceed reservation =>
         if (book) {
@@ -307,15 +305,15 @@ export class ReservationsResolver {
                 bookId: book?.id,
                 bookDateIdentity: `${dt
                   .toDateString()
-                  .split(' ')
-                  .join('')}-user${val.userId}-${val.title
-                  .split(' ')
-                  .join('')}`,
+                  .split(" ")
+                  .join("")}-user${val.userId}-${val.title
+                  .split(" ")
+                  .join("")}`,
                 // 3 for PENDING
                 reservationStatusId: 3,
-                details: 'Waiting for approval ....',
+                details: "Waiting for approval ....",
               })
-              .returning('*')
+              .returning("*")
               .execute()
               .then((result) => {
                 return result.raw[0];
@@ -337,9 +335,9 @@ export class ReservationsResolver {
           } catch (error) {
             // if book is borrow within the same day
             // Send error for duplication
-            if (error && error?.detail?.includes('already exists')) {
+            if (error && error?.detail?.includes("already exists")) {
               return errors.push({
-                field: 'bookDateIdentity',
+                field: "bookDateIdentity",
                 message: `You already had your reservation of book ${val.title} within this day.`,
               });
             }
@@ -349,10 +347,10 @@ export class ReservationsResolver {
         // Reservation with this book ${val.book} is imposible
         else {
           return errors.push({
-            field: 'book',
+            field: "book",
             message:
               `Book ${val.title} is Not Available. ` +
-              'Reasons : This book was already in your reservations or All copies of this book has been borrowed.',
+              "Reasons : This book was already in your reservations or All copies of this book has been borrowed.",
           });
         }
         return;
@@ -372,13 +370,15 @@ export class ReservationsResolver {
    */
   @Mutation(() => ReservationsResponse)
   async updateReservations(
-    @Arg('status') status: string,
-    @Arg('details') details: string,
-    @Arg('id', () => Int) id: number
+    @Arg("status") status: string,
+    @Arg("details") details: string,
+    @Arg("id", () => Int) id: number
   ): Promise<ReservationsResponse> {
     try {
       let reservations;
-      const reservationStatus = await ReservationStatus.findOne({ status });
+      const reservationStatus = await ReservationStatus.findOne({
+        where: { status },
+      });
 
       reservations = await updateEntity(id, Reservations, {
         details,
@@ -399,8 +399,8 @@ export class ReservationsResolver {
         return {
           errors: [
             {
-              field: 'reservationsId',
-              message: 'reservation not found',
+              field: "reservationsId",
+              message: "reservation not found",
             },
           ],
           isSucess: false,
@@ -413,7 +413,7 @@ export class ReservationsResolver {
   }
 
   @Mutation(() => Boolean)
-  async deleteBorrowTransaction(@Arg('id') id: number): Promise<Boolean> {
+  async deleteBorrowTransaction(@Arg("id") id: number): Promise<Boolean> {
     const isDeleted = await BorrowTransaction.delete(id);
     if (!isDeleted) {
       return false;

@@ -1,13 +1,12 @@
-import { getConnection } from 'typeorm';
+import { datasource } from "../db";
 
 export const insertForeignEntity = async (entity: any, inputData: object) => {
-  const connection = getConnection();
-  return await connection
+  return await datasource
     .createQueryBuilder()
     .insert()
     .into(entity)
     .values(inputData)
-    .returning('*')
+    .returning("*")
     .execute()
     .then((response) => {
       return response.raw[0];

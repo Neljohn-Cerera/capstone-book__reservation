@@ -1,10 +1,10 @@
-import { validateUserArgs } from './user.validate';
-import { UserArgs } from './user.args';
-import { User } from '../../entities/User';
-import { MyContext } from '../../types';
-import { Arg, Ctx, Mutation, Query, Resolver, Int } from 'type-graphql';
-import { getConnection } from 'typeorm';
-import { UserResponse } from './user.response';
+import { validateUserArgs } from "./user.validate";
+import { UserArgs } from "./user.args";
+import { User } from "../../entities/User";
+import { MyContext } from "../../types";
+import { Arg, Ctx, Mutation, Query, Resolver, Int } from "type-graphql";
+import { datasource } from "../../db";
+import { UserResponse } from "./user.response";
 
 @Resolver()
 export class UserResolver {
@@ -14,7 +14,7 @@ export class UserResolver {
     if (!req.session.userId) {
       return undefined;
     }
-    return await User.findOne(req.session.userId);
+    return (await User.findOne(req.session.userId)) || undefined;
   }
   //retrieve all
   @Query(() => [User], { nullable: true })
@@ -34,22 +34,22 @@ export class UserResolver {
   // update user
   @Mutation(() => UserResponse)
   async updateUser(
-    @Arg('userInput') dataInput: UserArgs,
-    @Arg('id', () => Int) id: number
+    @Arg("userInput") dataInput: UserArgs,
+    @Arg("id", () => Int) id: number
   ): Promise<UserResponse> {
     // input validation
     const errors = validateUserArgs(dataInput);
     if (errors) {
       return { errors, isSucess: false };
     }
-    const user = await getConnection()
+    const user = await datasource
       .createQueryBuilder()
       .update(User)
       .set({ ...dataInput })
-      .where('id = :id', {
+      .where("id = :id", {
         id,
       })
-      .returning('*')
+      .returning("*")
       .execute()
       .then((response) => {
         return response.raw[0];
@@ -59,8 +59,8 @@ export class UserResolver {
       return {
         errors: [
           {
-            field: 'userId',
-            message: 'user not found',
+            field: "userId",
+            message: "user not found",
           },
         ],
         isSucess: false,

@@ -1,24 +1,23 @@
-import { authorsLoader } from './dalataloader/authorsLoader';
-import { categoriesLoader } from './dalataloader/categoriesLoader';
-import { MyContext } from './types';
-import 'reflect-metadata';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import express from 'express';
-import connectRedis from 'connect-redis';
-import session from 'express-session';
-import { createConnection } from 'typeorm';
-import { redis } from './redis';
-import { ApolloServer } from 'apollo-server-express';
-import { COOKIE_NAME, PORT, __prod__ } from './constants';
-import { buildSchema } from 'type-graphql';
-import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
-
+import { authorsLoader } from "./dalataloader/authorsLoader";
+import { categoriesLoader } from "./dalataloader/categoriesLoader";
+import { MyContext } from "./types";
+import "reflect-metadata";
+import * as dotenv from "dotenv";
 dotenv.config();
+import cors from "cors";
+import express from "express";
+import connectRedis from "connect-redis";
+import session from "express-session";
+import { redis } from "./redis";
+import { ApolloServer } from "apollo-server-express";
+import { COOKIE_NAME, PORT, SESSION_SECRET, __prod__ } from "./constants";
+import { buildSchema } from "type-graphql";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
+import { dbconnect } from "./db";
 
 const main = async () => {
-  await createConnection();
-  console.log('Database Connected');
+  await dbconnect();
+  console.log("Database Connected");
   const app = express();
   const RedisStore = connectRedis(session);
 
@@ -31,7 +30,7 @@ const main = async () => {
         disableTouch: true,
       }),
       name: COOKIE_NAME,
-      secret: process.env.SESSION_SECRET as string,
+      secret: SESSION_SECRET,
       resave: false,
       saveUninitialized: false,
       cookie: {
@@ -43,7 +42,7 @@ const main = async () => {
   );
 
   const schema = await buildSchema({
-    resolvers: [__dirname + '/module/**/*.resolver.{ts,js}'],
+    resolvers: [__dirname + "/module/**/*.resolver.{ts,js}"],
     validate: true,
   });
 
@@ -61,7 +60,7 @@ const main = async () => {
 
   app.use(
     cors({
-      origin: ['http://localhost:3000'],
+      origin: ["http://localhost:3000"],
       credentials: true,
     })
   );
@@ -73,4 +72,4 @@ const main = async () => {
   app.listen(PORT, () => console.log(`Running on http://localhost:${PORT}`));
 };
 
-main().catch((err) => console.log('Main Server error : ', err));
+main().catch((err) => console.log("Main Server error : ", err));

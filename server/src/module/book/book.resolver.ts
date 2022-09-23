@@ -1,50 +1,48 @@
-import { updateEntity } from './../../utils/updateEntity';
-import { databaseError } from './../../utils/databaseError';
-import { BookGroupUniqueIdentity } from './../../entities/BookGroupUniqueIdentity';
-import { Books_Authors } from './../../entities/Books_Authors';
-import { BookAuthor } from './../../entities/BookAuthor';
-import { getConnection } from 'typeorm';
-import { Books_Categories } from '../../entities/Books_Categories';
-import { BookCategory } from './../../entities/BookCategory';
-import { BookArgs } from './book.args';
-import { insertForeignEntity } from './../../utils/insertForeignEntity';
-import { BookType } from './../../entities/BookType';
-import { FieldNotFoundError } from './../../utils/fieldNotFoundError';
-import { BookStatus } from './../../entities/BookStatus';
-import { BookSection } from './../../entities/BookSection';
-import { Book } from './../../entities/Book';
-import { Resolver, Query, Mutation, Arg, Int } from 'type-graphql';
+import { updateEntity } from "./../../utils/updateEntity";
+import { databaseError } from "./../../utils/databaseError";
+import { BookGroupUniqueIdentity } from "./../../entities/BookGroupUniqueIdentity";
+import { Books_Authors } from "./../../entities/Books_Authors";
+import { BookAuthor } from "./../../entities/BookAuthor";
+import { Books_Categories } from "../../entities/Books_Categories";
+import { BookCategory } from "./../../entities/BookCategory";
+import { BookArgs } from "./book.args";
+import { insertForeignEntity } from "./../../utils/insertForeignEntity";
+import { BookType } from "./../../entities/BookType";
+import { FieldNotFoundError } from "./../../utils/fieldNotFoundError";
+import { BookStatus } from "./../../entities/BookStatus";
+import { BookSection } from "./../../entities/BookSection";
+import { Book } from "./../../entities/Book";
+import { Resolver, Query, Mutation, Arg, Int } from "type-graphql";
 import {
   BookResponse,
   GetAllBooksGroupResponse,
   GetAllBooksResponse,
-} from './book.response';
-import { nanoid } from 'nanoid';
-
-const connection = getConnection();
+} from "./book.response";
+import { v4 as uuidv4 } from "uuid";
+import { datasource } from "../../db";
 
 @Resolver()
 export class BookResolver {
   // retrieve books
   @Query(() => GetAllBooksResponse)
   async getAllBooks(
-    @Arg('page', () => Int) page: number,
-    @Arg('perPage', () => Int) perPage: number,
-    @Arg('filterByTitle') filterByTitle: string
+    @Arg("page", () => Int) page: number,
+    @Arg("perPage", () => Int) perPage: number,
+    @Arg("filterByTitle") filterByTitle: string
   ): Promise<GetAllBooksResponse | null> {
     try {
-      const bookRepo = connection.getRepository(Book);
+      const bookRepo = datasource.getRepository(Book);
       const books = await bookRepo
-        .createQueryBuilder('book')
-        .innerJoinAndSelect('book.section', 'section')
-        .innerJoinAndSelect('book.status', 'status')
-        .innerJoinAndSelect('book.bookType', 'bookType')
-        .where('book.title ILIKE :title', {
+        .createQueryBuilder("book")
+        .innerJoinAndSelect("book.section", "section")
+        .innerJoinAndSelect("book.status", "status")
+        .innerJoinAndSelect("book.bookType", "bookType")
+        .where("book.title ILIKE :title", {
           title: `%${filterByTitle}%`,
         })
         .offset((page - 1) * perPage)
         .limit(perPage)
-        .orderBy('book.title', 'ASC')
+        .orderBy("book.title", "ASC")
         .getMany();
 
       const count = await bookRepo.count();
@@ -54,7 +52,7 @@ export class BookResolver {
       return {
         errors: [
           {
-            field: 'database error',
+            field: "database error",
             message: `error : ${error}`,
           },
         ],
@@ -65,49 +63,49 @@ export class BookResolver {
 
   @Query(() => GetAllBooksGroupResponse)
   async getAllBooksGroupByTitle(
-    @Arg('page', () => Int) page: number,
-    @Arg('perPage', () => Int) perPage: number,
-    @Arg('filterByTitle') filterByTitle: string,
-    @Arg('status') status: string
+    @Arg("page", () => Int) page: number,
+    @Arg("perPage", () => Int) perPage: number,
+    @Arg("filterByTitle") filterByTitle: string,
+    @Arg("status") status: string
   ): Promise<GetAllBooksGroupResponse | null> {
     try {
-      const bookRepo = connection.getRepository(Book);
+      const bookRepo = datasource.getRepository(Book);
 
       // books
       const books = await bookRepo
-        .createQueryBuilder('book')
+        .createQueryBuilder("book")
         .select([
-          'book.groupUniqueIdentityId as id',
-          'book.title as title',
+          "book.groupUniqueIdentityId as id",
+          "book.title as title",
           'book.isbnNumber as "isbnNumber"',
           'book.publisher as "publisher"',
           'book.placeOfPublication as "placeOfPublication"',
           'book.copyRightYear as "copyRightYear"',
-          'COUNT(book.title) as copies',
+          "COUNT(book.title) as copies",
           'book.dewyDecimal as "dewyDecimal"',
         ])
-        .addSelect(['section.section'])
-        .addSelect(['status.status'])
-        .addSelect(['bookType.type'])
-        .innerJoinAndSelect('book.section', 'section')
-        .innerJoinAndSelect('book.status', 'status')
-        .innerJoinAndSelect('book.bookType', 'bookType')
-        .where('book.title ILIKE :title', {
+        .addSelect(["section.section"])
+        .addSelect(["status.status"])
+        .addSelect(["bookType.type"])
+        .innerJoinAndSelect("book.section", "section")
+        .innerJoinAndSelect("book.status", "status")
+        .innerJoinAndSelect("book.bookType", "bookType")
+        .where("book.title ILIKE :title", {
           title: `%${filterByTitle}%`,
         })
-        .andWhere('status.status = :status', { status: status })
+        .andWhere("status.status = :status", { status: status })
         .offset((page - 1) * perPage)
         .limit(perPage)
-        .groupBy('book.title')
-        .addGroupBy('book.isbnNumber')
-        .addGroupBy('book.publisher')
-        .addGroupBy('book.placeOfPublication')
-        .addGroupBy('book.copyRightYear')
-        .addGroupBy('book.groupUniqueIdentityId')
-        .addGroupBy('book.dewyDecimal')
-        .addGroupBy('section.id')
-        .addGroupBy('status.id')
-        .addGroupBy('bookType.id')
+        .groupBy("book.title")
+        .addGroupBy("book.isbnNumber")
+        .addGroupBy("book.publisher")
+        .addGroupBy("book.placeOfPublication")
+        .addGroupBy("book.copyRightYear")
+        .addGroupBy("book.groupUniqueIdentityId")
+        .addGroupBy("book.dewyDecimal")
+        .addGroupBy("section.id")
+        .addGroupBy("status.id")
+        .addGroupBy("bookType.id")
         .getRawMany();
 
       return { books: books, count: books.length, isSucess: true };
@@ -115,7 +113,7 @@ export class BookResolver {
       return {
         errors: [
           {
-            field: 'database error',
+            field: "database error",
             message: `error : ${error}`,
           },
         ],
@@ -127,48 +125,46 @@ export class BookResolver {
   // create book
   @Mutation(() => BookResponse)
   async createBook(
-    @Arg('input') inputData: BookArgs,
-    @Arg('categories', () => [String]) categories: string[],
-    @Arg('authors', () => [String]) authors: string[],
-    @Arg('section') section: string,
-    @Arg('status') status: string,
-    @Arg('bookType') type: string
+    @Arg("input") inputData: BookArgs,
+    @Arg("categories", () => [String]) categories: string[],
+    @Arg("authors", () => [String]) authors: string[],
+    @Arg("section") section: string,
+    @Arg("status") status: string,
+    @Arg("bookType") type: string
   ): Promise<BookResponse> {
-    const queryRunner = connection.createQueryRunner();
+    const queryRunner = datasource.createQueryRunner();
     await queryRunner.connect();
     // validate book section
-    const bookSection = await BookSection.findOne({ section });
+    const bookSection = await BookSection.findOne({ where: { section } });
     if (!bookSection) {
-      const errors = FieldNotFoundError('bookSectionId', 'book section');
+      const errors = FieldNotFoundError("bookSectionId", "book section");
       return { errors, isSucess: false };
     }
     // validate book status
-    const bookStatus = await BookStatus.findOne({ status });
+    const bookStatus = await BookStatus.findOne({ where: { status } });
     if (!bookStatus) {
-      const errors = FieldNotFoundError('bookStatusId', 'book status');
+      const errors = FieldNotFoundError("bookStatusId", "book status");
       return { errors, isSucess: false };
     }
     // validate book type
-    const bookType = await BookType.findOne({ type });
+    const bookType = await BookType.findOne({ where: { type } });
     if (!bookType) {
-      const errors = FieldNotFoundError('bookTypeId', 'book type');
+      const errors = FieldNotFoundError("bookTypeId", "book type");
       return { errors, isSucess: false };
     }
     // validate bookGroupUniqueIdentity
     const findGroupTitle = await BookGroupUniqueIdentity.findOne({
       where: { groupTitle: inputData.title },
     });
-    console.log('findGroupTitle : ', findGroupTitle);
 
     // if bookGroupUniqueIdentity not found create bookGroupUniqueIdentity
     let createGroupTitle;
     if (!findGroupTitle) {
       createGroupTitle = await BookGroupUniqueIdentity.create({
-        groupUniqueIdentity: nanoid(10),
+        groupUniqueIdentity: uuidv4(),
         groupTitle: inputData.title,
       }).save();
     }
-    console.log('createGroupTitle : ', createGroupTitle);
 
     // transaction start
     await queryRunner.startTransaction();
@@ -187,7 +183,7 @@ export class BookResolver {
 
       // mapping  categories
       categories.map(async (category) => {
-        const _category = await BookCategory.findOne({ category });
+        const _category = await BookCategory.findOne({ where: { category } });
         if (!_category) {
           // if categry is not found we'll create category
           const newCategory = await BookCategory.create({ category }).save();
@@ -208,7 +204,7 @@ export class BookResolver {
       });
       // mapping  authors
       authors.map(async (author) => {
-        const _author = await BookAuthor.findOne({ author });
+        const _author = await BookAuthor.findOne({ where: { author } });
         if (!_author) {
           // if author is not found we'll create author
           const newAuthor = await BookAuthor.create({ author }).save();
@@ -233,7 +229,7 @@ export class BookResolver {
       return {
         errors: [
           {
-            field: 'database',
+            field: "database",
             message: `database error : ${error}`,
           },
         ],
@@ -244,7 +240,7 @@ export class BookResolver {
   }
   // Delete Book
   @Mutation(() => Boolean)
-  async deleteBook(@Arg('id', () => Int) id: number): Promise<Boolean> {
+  async deleteBook(@Arg("id", () => Int) id: number): Promise<Boolean> {
     const isBookDeleted = await Book.delete(id);
     if (!isBookDeleted) {
       return false;
@@ -259,8 +255,8 @@ export class BookResolver {
 
   @Mutation(() => BookResponse)
   async updateBookAvailability(
-    @Arg('id') id: number,
-    @Arg('status') status: string
+    @Arg("id") id: number,
+    @Arg("status") status: string
   ): Promise<BookResponse> {
     try {
       const _status = await BookStatus.findOne({ where: { status: status } });
@@ -268,8 +264,8 @@ export class BookResolver {
         return {
           errors: [
             {
-              field: 'status',
-              message: 'book status not found',
+              field: "status",
+              message: "book status not found",
             },
           ],
           isSucess: false,
@@ -280,8 +276,8 @@ export class BookResolver {
         return {
           errors: [
             {
-              field: 'bookId',
-              message: 'book not found',
+              field: "bookId",
+              message: "book not found",
             },
           ],
           isSucess: false,

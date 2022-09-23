@@ -1,16 +1,16 @@
-import { BookCategory } from './BookCategory';
-import { Book } from './Book';
+import { BookCategory } from "./BookCategory";
+import { Book } from "./Book";
 import {
   Entity,
   ManyToOne,
   BaseEntity,
   PrimaryColumn,
   JoinColumn,
-} from 'typeorm';
-import { Field, ObjectType, Int } from 'type-graphql';
+} from "typeorm";
+import { Field, ObjectType, Int } from "type-graphql";
 
 @ObjectType()
-@Entity({ name: 'books_categories' })
+@Entity({ name: "books_categories" })
 export class Books_Categories extends BaseEntity {
   @Field(() => Int)
   @PrimaryColumn()
@@ -20,16 +20,14 @@ export class Books_Categories extends BaseEntity {
   bookId: number;
 
   @ManyToOne(() => BookCategory, (category) => category.categories, {
-    primary: true,
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
-  @JoinColumn({ name: 'bookCategoryId' })
+  @JoinColumn({ name: "bookCategoryId" })
   bookCategory: Promise<BookCategory>;
 
   @ManyToOne(() => Book, (book) => book.bookCategories, {
-    primary: true,
-    onDelete: 'CASCADE',
+    onDelete: "CASCADE",
   })
-  @JoinColumn({ name: 'bookId' })
+  @JoinColumn({ name: "bookId" })
   book: Promise<Book>;
 }

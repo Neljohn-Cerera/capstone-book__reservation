@@ -1,20 +1,19 @@
-import { Arg, Query, Resolver } from 'type-graphql';
-import { getConnection } from 'typeorm';
+import { Arg, Query, Resolver } from "type-graphql";
+import { datasource } from "../db";
 
 // get a connection and create a new query runner
-const connection = getConnection();
-const queryRunner = connection.createQueryRunner();
+const queryRunner = datasource.createQueryRunner();
 
 @Resolver()
 export class DropTableResolver {
   //Retrieve roles
   @Query(() => Boolean)
-  async dropTable(@Arg('table') table: string): Promise<Boolean> {
+  async dropTable(@Arg("table") table: string): Promise<Boolean> {
     await queryRunner.connect();
 
     const dropRole = await queryRunner.dropTable(table);
 
-    console.log('drop role : ', dropRole);
+    console.log("drop role : ", dropRole);
 
     return true;
   }
