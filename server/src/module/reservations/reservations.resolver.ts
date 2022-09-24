@@ -176,7 +176,7 @@ export class ReservationsResolver {
    * @param {page} number Offset.
    * @param {perPage} number Limit.
    * @param {filterByName} string Filter by User FirstName.
-   * @param {status} string Reservation status includes 'PENDING' | 'APPROVED' | 'DISAPPROVED.
+   * @param {status} string Reservation status includes 'PENDING' | 'APPROVED' | 'DISAPPROVED'.
    * @return {[Reservations]} an array of Reservations Entity.
    */
   @Query(() => [Reservations])
@@ -211,7 +211,7 @@ export class ReservationsResolver {
    * @param {page} number Offset.
    * @param {perPage} number Limit.
    * @param {userId} string retrieve reservation base on userId.
-   * @param {status} string Reservation status includes 'PENDING' | 'APPROVED' | 'DISAPPROVED.
+   * @param {status} string Reservation status includes 'PENDING' | 'APPROVED' | 'DISAPPROVED'.
    * @return {[Reservations]} an array of Reservations Entity.
    */
   @Query(() => [Reservations])
@@ -309,8 +309,8 @@ export class ReservationsResolver {
                   .join("")}-user${val.userId}-${val.title
                   .split(" ")
                   .join("")}`,
-                // 3 for PENDING
-                reservationStatusId: 3,
+                // 1 for PENDING
+                reservationStatusId: 1,
                 details: "Waiting for approval ....",
               })
               .returning("*")
@@ -364,7 +364,7 @@ export class ReservationsResolver {
    * This will be done only from library staff
    *
    * @param {status} string Will be APPROVED | DISAPPROVED.
-   * @param {details} string This will come from library staff for reserve status information  .
+   * @param {details} string This will come from library staff for reserve status information.
    * @param {id} number Primary key of Reservations Entity.
    * @return {ReservationsResponse} includes reservation, errors, isSuccess .
    */
