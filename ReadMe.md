@@ -1,5 +1,16 @@
 # LIBRARY ONLINE BOOK RESERVATION
 
+## LIVE SITES
+
+### Web Client
+
+- [https://web-book-reservation.vercel.app/](https://web-book-reservation.vercel.app/)
+
+### Android Apk's
+
+- [Book Reservation APK](https://drive.google.com/file/d/1TuXc-Wf2unDXZbzoxzBN4inLgTA21dn-/view?usp=sharing)
+- [Book Reservation QR Scanner APK](https://drive.google.com/file/d/1zYyZ0fBds4tCmK96ppH0Pi0hLrClcErT/view?usp=sharing)
+
 ## Project Context
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Traditionally, library borrowing are used manually.
@@ -21,6 +32,10 @@ The application provides a feature that can manage student’s information, book
 
 ## System Flwo Charts
 
-### Android Flow Chart
+#### Android Client Flow Chart
 
-![Android Client Flow Chart!](/system-flowss/android_flowchart.png "San Juan Mountains")
+![Android Client Flow Chart!](/system-flows/android_flowchart.png "Android Client Flow Chart")
+
+#### Web Client Flow Chart
+
+![web Client Flow Chart!](/system-flows/web_flowchart.png "Web Client Flow Chart")
