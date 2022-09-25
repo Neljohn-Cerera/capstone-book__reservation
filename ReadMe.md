@@ -8,8 +8,8 @@
 
 #### Android Apk's
 
-- [Book Reservation APK](https://drive.google.com/file/d/1TuXc-Wf2unDXZbzoxzBN4inLgTA21dn-/view?usp=sharing)
-- [Book Reservation QR Scanner APK](https://drive.google.com/file/d/1zYyZ0fBds4tCmK96ppH0Pi0hLrClcErT/view?usp=sharing)
+- [Download Book Reservation APK](https://drive.google.com/file/d/1TuXc-Wf2unDXZbzoxzBN4inLgTA21dn-/view?usp=sharing)
+- [Downlaod Book Reservation QR Scanner APK](https://drive.google.com/file/d/1zYyZ0fBds4tCmK96ppH0Pi0hLrClcErT/view?usp=sharing)
 
 ## Project Context
 
