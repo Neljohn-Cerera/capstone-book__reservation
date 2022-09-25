@@ -3,6 +3,7 @@ import { categoriesLoader } from "./dalataloader/categoriesLoader";
 import { MyContext } from "./types";
 import "reflect-metadata";
 import * as dotenv from "dotenv";
+// set dotenv config before express to funcion properly
 dotenv.config();
 import cors from "cors";
 import express from "express";
@@ -10,7 +11,13 @@ import connectRedis from "connect-redis";
 import session from "express-session";
 import { redis } from "./redis";
 import { ApolloServer } from "apollo-server-express";
-import { COOKIE_NAME, PORT, SESSION_SECRET, __prod__ } from "./constants";
+import {
+  COOKIE_NAME,
+  ORIGIN,
+  PORT,
+  SESSION_SECRET,
+  __prod__,
+} from "./constants";
 import { buildSchema } from "type-graphql";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { dbconnect } from "./db";
@@ -47,6 +54,7 @@ const main = async () => {
   });
 
   const apolloServer = new ApolloServer({
+    cache: "bounded",
     schema,
     context: ({ req, res }): MyContext => ({
       req,
@@ -58,9 +66,20 @@ const main = async () => {
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
   });
 
+  app.use(function (_, res, next) {
+    res.header(
+      "Access-Control-Allow-Origin",
+      "https://web-book-reservation.vercel.app"
+    );
+    res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE");
+    res.header("Access-Control-Allow-Headers", "Content-Type");
+
+    next();
+  });
+
   app.use(
     cors({
-      origin: ["http://localhost:3000"],
+      origin: ORIGIN?.split(","),
       credentials: true,
     })
   );
@@ -69,7 +88,7 @@ const main = async () => {
 
   apolloServer.applyMiddleware({ app, cors: false });
 
-  app.listen(PORT, () => console.log(`Running on http://localhost:${PORT}`));
+  app.listen(PORT, () => console.log(`Running on PORT : ${PORT}`));
 };
 
 main().catch((err) => console.log("Main Server error : ", err));

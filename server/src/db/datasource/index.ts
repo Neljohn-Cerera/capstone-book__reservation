@@ -4,8 +4,11 @@ import {
   DB_NAME,
   DB_PASSWORD,
   DB_USERNAME,
+  __prod__,
 } from "../../constants";
 import { DataSource } from "typeorm";
+
+console.log("prod : ", __prod__!);
 
 const datasource = new DataSource({
   type: "postgres",
@@ -15,8 +18,9 @@ const datasource = new DataSource({
   password: DB_PASSWORD,
   database: DB_NAME,
   entities: ["dist/entities/*.js"],
-  synchronize: true,
-  logging: true,
+  synchronize: __prod__!,
+  logging: __prod__!,
+  ssl: __prod__!,
 });
 
 export default datasource;

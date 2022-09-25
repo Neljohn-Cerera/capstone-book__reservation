@@ -1,7 +1,8 @@
 import Redis from "ioredis";
-import { REDIS_HOST, REDIS_PORT } from "./constants";
+import { REDIS_URL } from "./constants";
 
-export const redis = new Redis({
-  host: REDIS_HOST,
-  port: REDIS_PORT,
+export const redis = new Redis(REDIS_URL);
+
+redis.on("error", function (err) {
+  console.error("redis error: " + err);
 });

@@ -10,7 +10,7 @@ import MainLayout from '../src/layouts/mainLayout';
 const persistor = persistStore(store);
 
 const client = new ApolloClient({
-  uri: 'http://localhost:5001/graphql',
+  uri: 'https://book-reservation-v1.herokuapp.com/graphql',
   credentials: 'include',
   cache: new InMemoryCache(),
   // devtools true if development and false for production

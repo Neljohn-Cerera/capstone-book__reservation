@@ -49,8 +49,9 @@ export class BorrowTransactionResolver {
                 const bookFine = Math.abs(borrow.remainingdays);
                 if (settings) {
                   const fine = bookFine * settings?.fine;
+                  // 4 = BORROWED, 3 = RETURNED, 2 = OVERDUE, 1 = LOST  { NEW }
                   await updateEntity(borrow.id, BorrowTransaction, {
-                    borrowTransactionStatusId: 3,
+                    borrowTransactionStatusId: 2,
                     fine,
                   } as BorrowTransaction);
                 }
@@ -122,8 +123,9 @@ export class BorrowTransactionResolver {
             rawData.map(async (borrow: any) => {
               if (borrow.remainingDays < 0) {
                 const bookFine = Math.abs(borrow.remainingDays);
+                // 4 = BORROWED, 3 = RETURNED, 2 = OVERDUE, 1 = LOST
                 await updateEntity(borrow.id, BorrowTransaction, {
-                  borrowTransactionStatusId: 3,
+                  borrowTransactionStatusId: 2,
                   fine: bookFine,
                 } as BorrowTransaction);
               }
@@ -214,12 +216,12 @@ export class BorrowTransactionResolver {
     }
     if (borrowRaw[0].status === "BORROWED") {
       try {
-        // 1 = BORROWED, 2 = RETURNED 3 = OVERDUE, 4 = LOST
+        // 4 = BORROWED, 3 = RETURNED, 2 = OVERDUE, 1 = LOST
         const updateBorrowed = await updateEntity(
           borrowRaw[0].id,
           BorrowTransaction,
           {
-            borrowTransactionStatusId: 2,
+            borrowTransactionStatusId: 3,
             paymentStatus: "PAID",
           } as BorrowTransaction
         );

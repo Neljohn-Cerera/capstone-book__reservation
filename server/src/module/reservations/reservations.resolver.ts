@@ -136,8 +136,8 @@ export class ReservationsResolver {
               userId: reservations.userId,
               borrowDate: new Date(),
               returnDate: returnDate,
-              // 1 = BORROWED, 2 = RETURNED 3 = OVERDUE, 4 = LOST
-              borrowTransactionStatusId: 1,
+              // 4 = BORROWED, 3 = RETURNED, 2 = OVERDUE, 1 = LOST
+              borrowTransactionStatusId: 4,
             })
             .returning("*")
             .execute()
@@ -309,8 +309,8 @@ export class ReservationsResolver {
                   .join("")}-user${val.userId}-${val.title
                   .split(" ")
                   .join("")}`,
-                // 1 for PENDING
-                reservationStatusId: 1,
+                // 3 for PENDING
+                reservationStatusId: 3,
                 details: "Waiting for approval ....",
               })
               .returning("*")

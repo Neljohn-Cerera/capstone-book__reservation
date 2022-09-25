@@ -1,14 +1,14 @@
 {
   "expo": {
-    "name": "library-app",
-    "slug": "library-app",
+    "name": "Book Reservation",
+    "slug": "bookreservation",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#3533AB"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -19,9 +19,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.neljohncerera.bookreservation"
     },
     "web": {
       "favicon": "./assets/favicon.png"
