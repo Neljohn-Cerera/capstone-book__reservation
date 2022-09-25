@@ -11,6 +11,64 @@
 - [Download Book Reservation APK](https://drive.google.com/file/d/1TuXc-Wf2unDXZbzoxzBN4inLgTA21dn-/view?usp=sharing)
 - [Downlaod Book Reservation QR Scanner APK](https://drive.google.com/file/d/1zYyZ0fBds4tCmK96ppH0Pi0hLrClcErT/view?usp=sharing)
 
+## Technology and Library Used
+
+#### Web Client using NextJS Framework Typescript
+
+- [Next](https://nextjs.org/)
+- [React](https://reactjs.org/)
+- [Typescript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Graphql](https://graphql.org/)
+- [@apollo/client](https://www.apollographql.com/docs/react/)
+- [@headlessui/react](https://headlessui.com/)
+- [@tailwindcss/forms](https://github.com/tailwindlabs/tailwindcss-forms)
+- [Redux](https://redux.js.org/)
+- [Redux Persist](https://github.com/rt2zz/redux-persist)
+- [Formik](https://formik.org/)
+- [Yup](https://www.npmjs.com/package/yup)
+- [URQL](https://formidable.com/open-source/urql/docs/basics/react-preact/)
+
+#### Server using Graphql Apollo-Server-Express Typescript
+
+- [Typescript](https://www.typescriptlang.org/)
+- [Apollo Server Express](https://www.apollographql.com/docs/apollo-server/integrations/middleware/)
+- [Graphql](https://graphql.org/)
+- [Type-Graqhql](https://typegraphql.com/)
+- [Express](https://expressjs.com/)
+- [Typeorm](https://typeorm.io/)
+- [PG](https://node-postgres.com/)
+- [IORedis](https://github.com/luin/ioredis)
+- [Bcryptjs](https://www.npmjs.com/package/bcryptjs)
+- [Cors](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+- [Moment](https://momentjs.com/)
+- [Morgan](https://www.npmjs.com/package/morgan)
+- [PM2](https://www.npmjs.com/package/pm2)
+- [UUID](https://www.npmjs.com/package/uuid)
+
+#### Android Client using React Native Expo
+
+- [Expo](https://docs.expo.dev/)
+- [@react-native-async-storage/async-storage](https://react-native-async-storage.github.io/async-storage/docs/install/)
+- [@react-navigation/drawer](https://reactnavigation.org/docs/drawer-based-navigation/)
+- [@react-navigation/native](https://reactnavigation.org/)
+- [@react-navigation/native-stack](https://reactnavigation.org/docs/native-stack-navigator/)
+- [expo-secure-store](https://docs.expo.dev/versions/latest/sdk/securestore/)
+- [expo-splash-screen](https://docs.expo.dev/guides/splash-screens/)
+- [expo-barcode-scanner](https://docs.expo.dev/versions/latest/sdk/bar-code-scanner/)
+- [react-native-custom-qr-codes-expo](https://www.npmjs.com/package/react-native-custom-qr-codes-expo)
+- [react-native-qrcode-svg](https://www.npmjs.com/package/react-native-qrcode-svg)
+- [react-native-paper](https://reactnativepaper.com/)
+- [Typescript](https://www.typescriptlang.org/)
+- [@apollo/client](https://www.apollographql.com/docs/react/)
+- [Graphql](https://graphql.org/)
+- [Redux](https://redux.js.org/)
+- [Redux Persist](https://github.com/rt2zz/redux-persist)
+- [Formik](https://formik.org/)
+- [Yup](https://www.npmjs.com/package/yup)
+- [UUID](https://www.npmjs.com/package/uuid)
+- [Immer](https://immerjs.github.io/immer/)
+
 ## Project Context
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Traditionally, library borrowing are used manually.
