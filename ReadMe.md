@@ -40,8 +40,6 @@ The application provides a feature that can manage student’s information, book
 
 ![web Client Flow Chart!](/system-flows/web_flowchart.png "Web Client Flow Chart")
 
-## System Schema
-
-####
+#### System Schema
 
 ![System Schema!](/system-flows/bookreservation_schema.png "System Schema")
