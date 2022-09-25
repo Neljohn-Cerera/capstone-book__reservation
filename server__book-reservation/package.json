@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "watch": "tsc --watch",
-    "start": "pm2-runtime start ecosystem.config.js --env production",
+    "start": "node dist/index.js",
     "dev": "nodemon dist/index.js",
     "build": "rimraf build && tsc",
     "postinstall": "npm run build"
@@ -44,7 +44,6 @@
     "moment": "^2.29.4",
     "morgan": "^1.10.0",
     "pg": "^8.8.0",
-    "pm2": "^5.2.0",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.1.1",
     "typeorm": "^0.3.10",

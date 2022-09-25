@@ -8,8 +8,6 @@ import {
 } from "../../constants";
 import { DataSource } from "typeorm";
 
-console.log("prod : ", __prod__!);
-
 const datasource = new DataSource({
   type: "postgres",
   host: DB_HOST,
@@ -18,8 +16,8 @@ const datasource = new DataSource({
   password: DB_PASSWORD,
   database: DB_NAME,
   entities: ["dist/entities/*.js"],
-  synchronize: __prod__!,
-  logging: __prod__!,
+  synchronize: false,
+  logging: false,
   ssl: __prod__!,
 });
 
